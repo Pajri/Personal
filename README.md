@@ -1,4 +1,3 @@
-Personal
+###Personal
+This project was created to learn ASP.NET Core MVC
 
-Scaffold PersonalContext
-Scaffold-DbContext "Server=localhost;Database=personal;User ID=<theusername>;Password=<thepassword>" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context PersonalContext -Tables Personal_Post
