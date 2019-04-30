@@ -1,3 +1,3 @@
-###Personal
-This project was created to learn ASP.NET Core MVC
+#Personal
 
+This project was created to learn ASP.NET Core MVC
