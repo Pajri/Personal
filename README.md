@@ -1,3 +1,5 @@
-#Personal
+# Personal
 
-This project was created to learn ASP.NET Core MVC
+This is diary-like website. This project was created to learn .NET Core MVC. 
+
+For authentication. this project uses ASP.NET Core Identity
