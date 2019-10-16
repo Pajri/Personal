@@ -41,6 +41,8 @@ namespace Personal
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddMvc();
         }
 
@@ -55,7 +57,7 @@ namespace Personal
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/home/error");
             }
 
             app.UseStaticFiles();
