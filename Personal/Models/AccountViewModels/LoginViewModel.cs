@@ -9,6 +9,10 @@ namespace Personal.Models.AccountViewModels
     public class LoginViewModel
     {
         [Required]
+        [DataType(DataType.Text)]
+        public string Username { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 

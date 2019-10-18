@@ -63,7 +63,18 @@ namespace Personal.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    TempData["ErrorMessage"] = "";
+                    ApplicationUser user = _userManager.Users.Where(u => u.UserName == model.Username).FirstOrDefault();
+                    if (user != null && !user.EmailConfirmed)
+                    {
+                        await _signInManager.SignOutAsync();
+                        TempData["ErrorMessage"] = "Please confirm your email.";
+                    }
+                    else
+                    {
+                        _logger.LogInformation("User " + user.UserName + " logged in.");
+
+                    }
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -314,6 +325,11 @@ namespace Personal.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+        }
+
+        private Task<ApplicationUser> _GetCurrentUser()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
         }
         #endregion
     }

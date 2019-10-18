@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Personal.Models;
 using Personal.Models.AccountViewModels;
 using Personal.Services;
+using Personal.Utils;
 
 namespace Personal.Controllers
 {
@@ -25,6 +27,7 @@ namespace Personal.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private IConfiguration _configuration { get; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -35,12 +38,14 @@ namespace Personal.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _configuration = configuration;
         }
         #endregion
 
@@ -61,7 +66,7 @@ namespace Personal.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName=model.FirstName,LastName=model.LastName };
+                var user = new ApplicationUser { UserName = model.Username, Email = model.Email, FirstName=model.FirstName,LastName=model.LastName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -132,8 +137,12 @@ namespace Personal.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+
+
+                string fromAddress = _configuration.GetValue<string>(ConfigUtils.Path.FORGOTPASSWORD_FROM_ADDRESS);
+                string subject = _configuration.GetValue<string>(ConfigUtils.Path.FORGOTPASSWORD_SUBJECT);
+                string body = _configuration.GetValue<string>(ConfigUtils.Path.FORGOTPASSWORD_BODY).Replace("$callbacUrl",callbackUrl);
+                await _emailSender.SendEmailAsync(model.Email,fromAddress, subject, body);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
