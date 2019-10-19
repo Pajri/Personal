@@ -16,56 +16,38 @@ using Personal.ViewModels;
 
 namespace Personal.Controllers
 {
-    public class PostViewModel
-    {
-        public PersonalPost Post { get; set; }
-        public IEnumerable<PersonalPost> Posts { get; set; }
-    }
     public class PostsController : Controller
     {
+        #region Properties
         private readonly PersonalContext _context;
         private UserManager<ApplicationUser> _userManager { get; set; }
         private IHostingEnvironment _env { get; set; }
+        #endregion
 
+        #region Constructors
         public PostsController(PersonalContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment env)
         {
             _context = context;
             _userManager = userManager;
             _env = env;
         }
+        #endregion
 
-        // GET: Posts
+        #region Actions
         public async Task<IActionResult> Index()
         {
             //process search
-            var queryPost = _LoadPost(); 
-
-            //create pagination
-            int pageSize = 5;
-            int total = queryPost.Count();
-            ViewData["total_pages"] = (int)Math.Ceiling(((decimal)total) / pageSize);
-            ViewData["current_page"] = 1;
-            queryPost = queryPost.Take(pageSize).OrderByDescending(p => p.InsertDate);
-
+            var queryPost = _GetPostForCurrentUser().OrderByDescending(p=>p.InsertDate).Take(10);
             var postList = await queryPost.ToListAsync();
             return View(postList);
         }
 
-        [HttpGet("/posts/page/{page:int}")]
-        public async Task<IActionResult> Page(int page)
+        public async Task<IActionResult> MorePosts(int page, int pageSize)
         {
-            if (page == 0) page = 1;
-            var queryPost = _LoadPost();
-
-            //create pagination
-            int pageSize = 5;
-            int total = queryPost.Count();
-            ViewData["total_pages"] = (int) Math.Ceiling(((decimal)total) / pageSize);
-            ViewData["current_page"] = page;
-            List<PersonalPost> postList = await queryPost.Skip((page-1)*pageSize).Take(pageSize)
-                .OrderByDescending(p=>p.InsertDate).ToListAsync();
-
-            return View("Index",postList);
+            //process search
+            var posts = _GetPostForCurrentUser().OrderByDescending(p=>p.InsertDate)
+                .Skip((page - 1) * pageSize).Take(pageSize);
+            return PartialView("PartialPosts", posts.ToList());
         }
 
         // POST: Posts/Create
@@ -81,7 +63,7 @@ namespace Personal.Controllers
             if (ModelState.IsValid)
             {
                 personalPost.Id = Guid.NewGuid();
-                string[] imgNameList = _UploadImages(images,personalPost.Id.ToString());
+                string[] imgNameList = _UploadImages(images, personalPost.Id.ToString());
                 personalPost.ImageUrls = (imgNameList != null) ? string.Join(";", imgNameList) : null;
                 personalPost.InsertDate = DateTime.Now;
                 personalPost.LastUpdated = DateTime.Now;
@@ -116,13 +98,13 @@ namespace Personal.Controllers
                 UserId = personalPost.UserId
             };
 
-            if(personalPost.ImageUrls != null && personalPost.ImageUrls != "")
+            if (personalPost.ImageUrls != null && personalPost.ImageUrls != "")
             {
                 personalPostViewModel.StoredImageUrls = personalPost.ImageUrls.Split(";");
-                
+
             }
-            
-           
+
+
             return View(personalPostViewModel);
         }
 
@@ -148,12 +130,12 @@ namespace Personal.Controllers
                     personalPost.InsertDate = personalPostViewModel.InsertDate;
                     personalPost.LastUpdated = DateTime.Now;
                     personalPost.UserId = personalPostViewModel.UserId;
-                    
+
                     string existingImages = _context.PersonalPost.Where(p => p.Id == personalPost.Id).FirstOrDefault().ImageUrls;
                     //delete unselected images
-                    if(existingImages != null && existingImages != "")
+                    if (existingImages != null && existingImages != "")
                     {
-                        if(personalPostViewModel.StoredImageUrls == null)
+                        if (personalPostViewModel.StoredImageUrls == null)
                         {
                             _DeleteImages(personalPost.ImageUrls);
                         }
@@ -167,17 +149,17 @@ namespace Personal.Controllers
                                 }
                             }
                         }
-                        
+
                     }
 
                     //upload image new images
                     int startNumber = 0;
-                    if(personalPost.ImageUrls != null && personalPost.ImageUrls != "")
+                    if (personalPost.ImageUrls != null && personalPost.ImageUrls != "")
                     {
                         startNumber = personalPost.ImageUrls.Split(";").Count();
                     }
 
-                    string[] newImages = _UploadImages(personalPostViewModel.NewImages, personalPost.Id.ToString(), startNumber+1);
+                    string[] newImages = _UploadImages(personalPostViewModel.NewImages, personalPost.Id.ToString(), startNumber + 1);
                     personalPost.ImageUrls = _CreateImageUrls(personalPostViewModel.StoredImageUrls, newImages);
 
                     _context.Update(personalPost);
@@ -210,7 +192,9 @@ namespace Personal.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        #endregion
+       
+        #region Private Methods
         private string[] _UploadImages(List<IFormFile> images, string baseFileName, int startNumber = 0)
         {
             if (images == null) return null;
@@ -267,31 +251,33 @@ namespace Personal.Controllers
         private string _CreateImageUrls(string[] storedImageUrls, string[] newImageUrls)
         {
             string imageUrls = "";
-            if(storedImageUrls != null && storedImageUrls.Length > 0)
+            if (storedImageUrls != null && storedImageUrls.Length > 0)
             {
                 imageUrls = string.Join(";", storedImageUrls);
             }
 
-            if(newImageUrls != null && newImageUrls.Length > 0)
+            if (newImageUrls != null && newImageUrls.Length > 0)
             {
-                imageUrls += ";" + string.Join(";",newImageUrls);
+                imageUrls += ";" + string.Join(";", newImageUrls);
                 imageUrls = imageUrls.TrimStart(';');
             }
 
             return imageUrls;
         }
 
-        private IQueryable<PersonalPost> _LoadPost()
+        private IQueryable<PersonalPost> _GetPostForCurrentUser()
         {
             var queryPost = _context.PersonalPost
                 .Where(p => (p.UserId == _userManager.GetUserId(User)));
             return queryPost;
         }
-             
+
         private bool PersonalPostExists(Guid id)
         {
             return _context.PersonalPost.Any(e => e.Id == id);
         }
+        #endregion
+
 
     }
 }
