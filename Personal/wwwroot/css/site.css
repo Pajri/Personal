@@ -26,6 +26,21 @@
     margin: 15px;
 }
 
+.home {
+    height:100vh;
+    padding:4%;
+}
+
+.home .main {
+    height:100%;
+}
+    .home .vertical-center {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+    }
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

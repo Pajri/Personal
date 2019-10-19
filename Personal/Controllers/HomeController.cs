@@ -61,9 +61,9 @@ namespace Personal.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
+                TempData["ErrorMessage"] = "";
                 if (result.Succeeded)
                 {
-                    TempData["ErrorMessage"] = "";
                     ApplicationUser user = _userManager.Users.Where(u => u.UserName == model.Username).FirstOrDefault();
                     if (user != null && !user.EmailConfirmed)
                     {
@@ -83,8 +83,9 @@ namespace Personal.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToAction(nameof(Lockout));
+                    TempData["ErrorMessage"] = "Your account has been locked out";
+                    _logger.LogWarning("User account "+model.Username+" is locked out.");
+                    return RedirectToLocal(returnUrl);
                 }
                 else
                 {
