@@ -56,13 +56,14 @@ namespace Personal.Controllers
         // TODO: Add Authorize
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string Content, List<IFormFile> images)
+        public async Task<IActionResult> Create(string Content)
         {
             PersonalPost personalPost = new PersonalPost();
             personalPost.Content = Content;
             if (ModelState.IsValid)
             {
                 personalPost.Id = Guid.NewGuid();
+                List<IFormFile> images = Request.Form.Files.Where(f => f.Name == "images[]").ToList();
                 string[] imgNameList = _UploadImages(images, personalPost.Id.ToString());
                 personalPost.ImageUrls = (imgNameList != null) ? string.Join(";", imgNameList) : null;
                 personalPost.InsertDate = DateTime.Now;

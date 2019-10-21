@@ -37,3 +37,27 @@ if ($('#postlisting').length != 0) {
     });
 }
 
+if ($('.post-input').length != 0) {
+    $('.post-input').focus(function () {
+        $(this).animate({ rows: 7 }, 200, 'swing');
+    });
+    $('.post-input').focusout(function () {
+        $(this).animate({ rows: 1 }, 200, 'swing');
+    });
+}
+
+$(document).ready(function () {
+    if ($('#inputImages').length != 0) {
+        $('#inputImages').filer({
+            limit: 3,
+            maxSize: 10,
+            extensions: ["jpg", "png", "gif"],
+            showThumbs: true,
+            addMore: true,
+            changeInput: '<button class="btn upload-image" onclick="return false;"><span class="fas fa-images text-warning"></span></button>',
+            uploadFile: null,
+            onSelect: null
+        });
+    }
+    
+});

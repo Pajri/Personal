@@ -5,20 +5,18 @@
 }
 
     <div id="postlisting">
-        <form style="margin-top:20px; border-bottom: solid black 1px;" asp-controller="Posts" asp-action="Create" method="POST" enctype="multipart/form-data">
+        <form class="mt-4 bg-dark p-3 form-post" asp-controller="Posts" asp-action="Create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <textarea name="content" rows="3" class="form-control" placeholder="How was your day ?'" required></textarea>
-            </div>
-            <div class="form-group">
-                Photo : <input type="file" name="images" multiple />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Post !" />
+                <textarea name="content" rows="1" class="form-control post-input" placeholder="How was your day ?'" required></textarea>
+                <div class="my-2">
+                    <input type="file" name="images" multiple id="inputImages"/>
+                    <input type="submit" class="btn btn-outline-warning border-0 float-right" value="Post !" />
+                </div>
             </div>
         </form>
         <br />
 
-        <table class="table">
+        <table class="table d-none">
             <thead>
                 <tr>
                     <th>

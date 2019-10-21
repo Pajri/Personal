@@ -41,10 +41,58 @@
         width: 100%;
     }
 
+.post-page {
+    background-color: #fafafa;
+}
+
+.post-page .form-post{
+    overflow:auto;
+}
+
+    .post-page .form-post .post-input-expand {
+        height: 210px;
+        transition: all .3s ease;
+    }
+
+    .post-page .form-post .jFiler-theme-default {
+        display: inline !important;
+    }
+
+    .post-page .form-post .upload-image:hover {
+        background-color: #ffc107;
+    }
+
+        .post-page .upload-image:hover span {
+            color: white !important; 
+        }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
     .carousel-caption {
         display: none;
+    }
+}
+
+@media (min-width: 1200px){
+    .post-container {
+        max-width: 578px;
+    }
+}
+
+@media (min-width: 992px){
+    .post-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 768px){
+    .post-container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 576px) {
+    .post-container {
+        max-width: 540px;
     }
 }
