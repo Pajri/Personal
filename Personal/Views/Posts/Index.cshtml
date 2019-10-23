@@ -5,11 +5,11 @@
 }
 
     <div id="postlisting">
-        <form class="mt-3 bg-dark p-3 form-post" asp-controller="Posts" asp-action="Create" method="POST" enctype="multipart/form-data">
+        <form class="mt-3 shadow-sm bg-dark p-3 form-post" asp-controller="Posts" asp-action="Create" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <textarea name="content" id="txtContent" rows="5" class="form-control post-input" placeholder="How was your day ?'" required></textarea>
+                <textarea name="content" id="txtContent" rows="5" class="form-control post-input" placeholder="How was your day ?" required></textarea>
                 <div class="my-2">
-                    <input type="file" name="images" multiple id="inputImages" maxlength="1000"/>
+                    <input type="file" name="images" multiple id="inputImages" maxlength="1000" />
                     <div class="float-right d-flex align-items-center">
                         <small id="textRemaining" class="text-white mr-2"></small>
                         <input type="submit" class="btn btn-outline-warning border-0 float-right" value="Post !">
@@ -17,34 +17,17 @@
                 </div>
             </div>
         </form>
-        <br />
 
-        <table class="table d-none">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Content)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ImageUrls)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.InsertDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.LastUpdated)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UserId)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="postList">
-                @Html.Partial("PartialPosts", Model)
-            </tbody>
-        </table>
+        <div id="postList" class="mt-3">
+            @Html.Partial("PartialPosts", Model)
+        </div>
 
-        <p id="loadingtext" style="margin-left:auto; margin-right:auto;display:none;"> </p>
-        <input id="hidPage" type="hidden" name="page" value="1"/>
+        <button id="loadingtext" class="btn btn-success fixed-bottom rounded-0 mb-3 col-md-4 loading" type="button" disabled style="display:none;">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+
+        <button id="errortext" class="btn btn-danger fixed-bottom rounded-0 mb-3 col-md-4 loading" type="button" disabled="" style="display:none;">
+            Unable to load posts
+        </button>
     </div>

@@ -7,6 +7,7 @@ $(document).ready(function () {
     initJqueryFiler();
     initInfiniteScroll();
     initContentCounter();
+    initPostImages();
 });
 
 function initJqueryFiler() {
@@ -32,28 +33,24 @@ function initInfiniteScroll() {
                     url: '/posts/moreposts?page=' + page + '&pageSize=' + pageSize,
                     type: 'GET',
                     beforeSend: function () {
-                        $('#loadingtext').addClass('text-info');
-                        $('#loadingtext').text('Loading ...');
                         $('#loadingtext').show();
                     },
                     success: function (data) {
                         if (data != null && data.trim() != "") {
                             $("#postList").append(data);
                             page++;
+                            initPostImages();
                         }
                         $('#loadingtext').hide();
                     },
                     error: function (data) {
-                        $('#loadingtext').text('Unable to load posts');
-                        $('#loadingtext').addClass('text-danger');
-                        $('#loadingtext').fadeIn().delay(2000).fadeOut();
+                        $('#loadingtext').hide();
+                        $('#errortext').fadeIn().delay(3000).fadeOut();
                     },
                     complete: function () {
                         isGettingMorePosts = false;
                     }
                 });
-            } else {
-                $("#loadingtext").hide();
             }
         });
     }
@@ -68,6 +65,43 @@ function initContentCounter() {
         });
 
     }
+}
+function initPostImages() {
+    if ($(".photoList").length != 0) {
+        $(".photoList").justifiedGallery({
+            rowHeight: 120,
+            maxRowHeight: null,
+            margins: 1,
+            border: 1,
+            rel: 'photolist',
+            lastRow: 'justify',
+            captions: false,
+            randomize: false
+        });
+
+        //$('.photoList').magnificPopup({
+        //    delegate: 'a',
+        //    type: 'image',
+        //    gallery: {
+        //        enabled: true,
+        //        preload: [0, 2]
+        //    }
+        //});
+
+        $('.photoList').each(function () { // the containers for all your galleries
+            $(this).magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                gallery: {
+                    enabled: true,
+                    preload: [0, 2]
+                }
+            });
+        });
+    }
+   
+
+    
 }
 
 

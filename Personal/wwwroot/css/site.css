@@ -3,13 +3,6 @@
     padding-bottom: 20px;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -41,30 +34,48 @@
         width: 100%;
     }
 
-.post-page {
+.post-container {
     background-color: #fafafa;
 }
 
-.post-page .form-post{
-    overflow:auto;
+.post-container .form-post {
+    overflow: auto;
 }
 
-    .post-page .form-post .post-input-expand {
-        height: 210px;
-        transition: all .3s ease;
+.post-container .form-post .post-input-expand {
+    height: 210px;
+    transition: all .3s ease;
+}
+
+.post-container .form-post .jFiler-theme-default {
+    display: inline !important;
+}
+
+.post-container .form-post .upload-image:hover {
+    background-color: #ffc107;
+}
+
+.post-container .upload-image:hover span {
+    color: white !important;
+}
+
+    .post-container .post-dropdown {
+        font-size:.8em;
+        min-width:0px!important;
     }
 
-    .post-page .form-post .jFiler-theme-default {
-        display: inline !important;
+    .post-container .post-item{
+        width:100%;
     }
 
-    .post-page .form-post .upload-image:hover {
-        background-color: #ffc107;
-    }
-
-        .post-page .upload-image:hover span {
-            color: white !important; 
+        .post-container .post-item .dropdown .dropdown-menu .dropdown-item:focus {
+            background-color: #e0e0e0;
         }
+
+    .post-container .loading {
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
@@ -75,7 +86,7 @@
 
 @media (min-width: 1200px){
     .post-container {
-        max-width: 578px;
+        max-width: 608px;
     }
 }
 

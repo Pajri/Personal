@@ -2,33 +2,43 @@
 
 @foreach (var post in Model)
 {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => post.Content)
-        </td>
-        <td>
-            @if (post.ImageUrls != null && post.ImageUrls != "")
-            {
-                string[] arrImageUrls = post.ImageUrls.Split(";");
-                foreach (var url in arrImageUrls)
-                {
-                    <img src="@url" width="200px" height="200px" /><br />
-                }
-            }
+    <div class="row mx-0 shadow-sm my-3">
+        <div class="card post-item">
+            <div class="card-header bg-dark text-light">
+                @string.Format("{0:dd MMM yyyy}", post.InsertDate)
+                <div class="dropdown float-right">
+                    <a href="#" class="fa fa-grip-vertical text-secondary" data-toggle="dropdown" aria-expanded="false"></a>
+                    <div class="dropdown-menu rounded-0 dropdown-menu-right post-dropdown">
+                        <form asp-controller="Posts" asp-action="Delete">
+                            <a asp-action="Edit" asp-route-id="@post.Id" class="dropdown-item">Edit</a>
+                            <button class="dropdown-item" onclick="return confirm('Are you sure you want to delete this post ?')">Delete</button>
 
-        </td>
-        <td>
-            @string.Format("{0:dd MMMM yyyy hh:mm tt}", post.InsertDate)
-        </td>
-        <td>
-            @string.Format("{0:dd MMMM yyyy hh:mm tt}", post.LastUpdated)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-primary" style="display:block;">Edit</a>
-            <form asp-controller="Posts" asp-action="Delete">
-                <input type="hidden" name="id" value="@post.Id" />
-                <button class="btn btn-danger" style="width:100%;">Delete</button>
-            </form>
-        </td>
-    </tr>
+                            <input type="hidden" name="id" value="@post.Id" />
+                        </form>
+                        @*<a class="dropdown-item" href="#">Delete</a>*@
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    @Html.DisplayFor(modelItem => post.Content)
+                </p>
+
+            </div>
+        </div>
+        
+        @if (post.ImageUrls != null && post.ImageUrls != "")
+        {
+            @:<div class="photoList">
+
+            string[] arrImageUrls = post.ImageUrls.Split(";");
+            foreach (var url in arrImageUrls)
+            {
+                <a href="@url" class="swipebox">
+                    <img src="@url" alt="image"/>
+                </a>
+            }
+            @:</div>
+        }
+    </div>
 }
