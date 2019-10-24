@@ -22,6 +22,8 @@ namespace Personal.Controllers
         private readonly PersonalContext _context;
         private UserManager<ApplicationUser> _userManager { get; set; }
         private IHostingEnvironment _env { get; set; }
+
+        private const string VDATA_SEARCH = "search_keyword";
         #endregion
 
         #region Constructors
@@ -34,19 +36,21 @@ namespace Personal.Controllers
         #endregion
 
         #region Actions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search="")
         {
             //process search
-            var queryPost = _GetPostForCurrentUser().OrderByDescending(p=>p.InsertDate).Take(10);
+            var queryPost = _QueryPosts(search).Take(10);            
             var postList = await queryPost.ToListAsync();
+
+            ViewData[VDATA_SEARCH] = search; 
             return View(postList);
         }
 
-        public async Task<IActionResult> MorePosts(int page, int pageSize)
+        public async Task<IActionResult> MorePosts(int page, int pageSize, string search)
         {
             //process search
-            var posts = _GetPostForCurrentUser().OrderByDescending(p=>p.InsertDate)
-                .Skip((page - 1) * pageSize).Take(pageSize);
+            var posts = _QueryPosts(search).Skip((page - 1) * pageSize).Take(pageSize);
+            ViewData[VDATA_SEARCH] = search;
             return PartialView("PartialPosts", posts.ToList());
         }
 
@@ -168,7 +172,7 @@ namespace Personal.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonalPostExists(personalPostViewModel.Id))
+                    if (!_PersonalPostExists(personalPostViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -266,6 +270,11 @@ namespace Personal.Controllers
             return imageUrls;
         }
 
+        private IQueryable<PersonalPost> _QueryPosts(string search="")
+        {
+            return _GetPostForCurrentUser().OrderByDescending(p => p.InsertDate)
+                .Where(p => p.Content.ToLower().Contains(search.Trim().ToLower()));
+        }
         private IQueryable<PersonalPost> _GetPostForCurrentUser()
         {
             var queryPost = _context.PersonalPost
@@ -273,7 +282,7 @@ namespace Personal.Controllers
             return queryPost;
         }
 
-        private bool PersonalPostExists(Guid id)
+        private bool _PersonalPostExists(Guid id)
         {
             return _context.PersonalPost.Any(e => e.Id == id);
         }

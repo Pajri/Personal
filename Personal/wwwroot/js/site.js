@@ -29,8 +29,9 @@ function initInfiniteScroll() {
         $(window).scroll(function () {
             if (($(window).scrollTop() == $(document).height() - $(window).height()) && !isGettingMorePosts) {
                 isGettingMorePosts = true;
+                var searchKeyword = $('#searchKeyword').val();
                 $.ajax({
-                    url: '/posts/moreposts?page=' + page + '&pageSize=' + pageSize,
+                    url: '/posts/moreposts?page=' + page + '&pageSize=' + pageSize+'&search='+searchKeyword,
                     type: 'GET',
                     beforeSend: function () {
                         $('#loadingtext').show();
@@ -78,15 +79,6 @@ function initPostImages() {
             captions: false,
             randomize: false
         });
-
-        //$('.photoList').magnificPopup({
-        //    delegate: 'a',
-        //    type: 'image',
-        //    gallery: {
-        //        enabled: true,
-        //        preload: [0, 2]
-        //    }
-        //});
 
         $('.photoList').each(function () { // the containers for all your galleries
             $(this).magnificPopup({
