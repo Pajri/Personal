@@ -25,7 +25,7 @@ function initJqueryFiler() {
     }
 }
 function initInfiniteScroll() {
-    if ($('#postlisting').length != 0) {
+    if ($('#postContainer').length != 0) {
         $(window).scroll(function () {
             if (($(window).scrollTop() == $(document).height() - $(window).height()) && !isGettingMorePosts) {
                 isGettingMorePosts = true;

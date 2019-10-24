@@ -32,7 +32,6 @@
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <a class="navbar-brand" href="#">Personal</a>
                 <form class="form-inline search-box" method="GET" asp-action="Index">
-                    @*<input class="form-control search-input w-100 rounded-0" type="search" placeholder="Zoeken..." name="search" id="search">*@
                     <div class="input-group w-100">
                         <input class="form-control rounded-0 bg-white border-0" name="search" placeholder="search..." value='@ViewData["search_keyword"]'>
                         <div class="input-group-append">
@@ -42,18 +41,15 @@
                         </div>
                     </div>
                 </form>
-                <input type="hidden" id="searchKeyword" name="searchKeyword" value="@ViewData["search_keyword"]"/>
+                <input type="hidden" id="searchKeyword" name="searchKeyword" value="@ViewData["search_keyword"]" />
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
-    <div class="container px-0 body-content post-container">
+    <div class="container px-0">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2019 - Personal</p>
-        </footer>
     </div>
+    @Html.Partial("FooterPartial")
 
     <script src="~/lib/jquery/dist/jquery.min.js"><</script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

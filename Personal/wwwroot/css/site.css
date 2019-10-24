@@ -1,6 +1,5 @@
 ﻿body {
     padding-top: 50px;
-    padding-bottom: 20px;
 }
 
 /* Carousel */
@@ -40,8 +39,10 @@
     transform: translateX(-50%);
     width: 538px;
 }
-.post-container {
-    background-color: #fafafa;
+
+.post-container{
+    margin-right:auto;
+    margin-left:auto;
 }
 
 .post-container .form-post {
@@ -81,6 +82,7 @@
     .post-container .loading {
         left: 50%;
         transform: translate(-50%, 0);
+        margin-bottom: 74px!important;
     }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

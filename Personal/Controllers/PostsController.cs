@@ -49,9 +49,10 @@ namespace Personal.Controllers
         public async Task<IActionResult> MorePosts(int page, int pageSize, string search)
         {
             //process search
-            var posts = _QueryPosts(search).Skip((page - 1) * pageSize).Take(pageSize);
+            var queryPost = _QueryPosts(search).Skip((page - 1) * pageSize).Take(pageSize);
+            var postList = await queryPost.ToListAsync();
             ViewData[VDATA_SEARCH] = search;
-            return PartialView("PartialPosts", posts.ToList());
+            return PartialView("PartialPosts", postList);
         }
 
         // POST: Posts/Create
@@ -272,6 +273,7 @@ namespace Personal.Controllers
 
         private IQueryable<PersonalPost> _QueryPosts(string search="")
         {
+            if (search == null) search = "";
             return _GetPostForCurrentUser().OrderByDescending(p => p.InsertDate)
                 .Where(p => p.Content.ToLower().Contains(search.Trim().ToLower()));
         }
