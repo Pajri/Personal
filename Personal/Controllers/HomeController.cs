@@ -83,19 +83,19 @@ namespace Personal.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    TempData["ErrorMessage"] = "Your account has been locked out";
+                    TempData[nameof(ErrorMessage)] = "Your account has been locked out";
                     _logger.LogWarning("User account "+model.Username+" is locked out.");
                     return RedirectToLocal(returnUrl);
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
+                    TempData[nameof(ErrorMessage)] = "Invalid login attempt.";
+                    return RedirectToLocal(returnUrl);
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View(nameof(Index), model);
         }
 
         [HttpGet]        

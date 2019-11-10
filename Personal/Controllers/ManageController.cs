@@ -57,19 +57,28 @@ namespace Personal.Controllers
 
             var model = new IndexViewModel
             {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
+                User = user,
                 StatusMessage = StatusMessage
             };
 
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangeProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            return View(user);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IndexViewModel model)
+        public async Task<IActionResult> ChangeProfile(ApplicationUser model)
         {
             if (!ModelState.IsValid)
             {
@@ -82,28 +91,32 @@ namespace Personal.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var email = user.Email;
-            if (model.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
-                }
-            }
 
-            var phoneNumber = user.PhoneNumber;
-            if (model.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
-                }
-            }
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
 
-            StatusMessage = "Your profile has been updated";
-            return RedirectToAction(nameof(Index));
+            string emailChangedMessage = "";
+            if(user.Email != model.Email)
+            {
+                user.Email = model.Email;
+                user.EmailConfirmed = false;
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                emailChangedMessage = "Please check your email to confirm your updated email.";
+            }
+            
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return View(user);
+            }
+            else
+            {
+                StatusMessage = "Your profile has been updated.";
+                StatusMessage += " "+emailChangedMessage;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]

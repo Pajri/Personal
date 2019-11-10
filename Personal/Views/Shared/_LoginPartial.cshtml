@@ -6,7 +6,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <form class="ml-auto" asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+    <form class="ml-auto logout-form" asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
         <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
             <li class="nav-item">
                 <a class="nav-link text-white" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">@UserManager.GetUserAsync(User).Result.FirstName</a>

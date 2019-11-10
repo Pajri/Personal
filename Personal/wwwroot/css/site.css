@@ -2,6 +2,10 @@
     padding-top: 50px;
 }
 
+.body-container {
+    min-height: calc(100vh - 56px - 56px + 6px);
+}
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
@@ -113,5 +117,16 @@
 @media (min-width: 576px) {
     .post-container {
         max-width: 540px;
+    }
+}
+
+/*Medium devices (tablets, less than 992px)*/
+@media (max-width: 991.98px) {
+    .search-box {
+        width: 100% !important;
+    }
+
+    .logout-form {
+        margin-top: 55px;
     }
 }

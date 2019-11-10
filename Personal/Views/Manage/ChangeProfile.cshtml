@@ -1,0 +1,64 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = "Profile";
+}
+
+@if (!Model.EmailConfirmed)
+{
+    <div class="row pt-4">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    @Html.Partial("_StatusMessage", "Error : Your email has not been confirmed.")
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+
+<form method="post" class="row pt-4" asp-action="ChangeProfile">
+    <div class="col-md-6">
+        <p class="font-weight-bold">Profile</p>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>First Name</label>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label>Last Name</label>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-6">
+                <label asp-for="Email"></label>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-warning text-white rounded-0">Update Profile</button>
+    </div>
+</form>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
