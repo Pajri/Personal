@@ -13,9 +13,11 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Personal.Utils;
 using Personal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Personal.Controllers
 {
+    [Authorize]
     public class PostsController : Controller
     {
         #region Properties

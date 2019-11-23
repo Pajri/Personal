@@ -14,6 +14,8 @@ using Personal.Services;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Personal.Utils;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Personal
 {
@@ -45,6 +47,16 @@ namespace Personal
                 options.Lockout.MaxFailedAccessAttempts = 5;
             });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+                options.LoginPath = "/";
+                options.SlidingExpiration = true;
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -56,6 +68,7 @@ namespace Personal
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -64,7 +77,17 @@ namespace Personal
             }
             else
             {
-                app.UseExceptionHandler("/home/error");
+                app.UseExceptionHandler("/Error");
+                app.Use(async (ctx, next) =>
+                {
+                    await next();
+                    if(ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                    {
+                        ctx.Request.Path = "/error/404";
+                        await next(); //re execute request
+                    }
+                });
+                
             }
 
             app.UseStaticFiles();

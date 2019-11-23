@@ -1,1 +1,133 @@
-body{padding-top:50px;padding-bottom:20px}.body-content{padding-left:15px;padding-right:15px}.carousel-caption p{font-size:20px;line-height:1.4}.carousel-inner .item img[src$=".svg"]{width:100%}#qrCode{margin:15px}@media screen and (max-width:767px){.carousel-caption{display:none}}
+body {
+    padding-top: 50px;
+}
+
+.body-container {
+    min-height: calc(100vh - 56px - 56px + 6px);
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* QR code generator */
+#qrCode {
+    margin: 15px;
+}
+
+.home {
+    height: 100vh;
+    padding: 4%;
+}
+
+    .home .main {
+        height: 100%;
+    }
+
+    .home .vertical-center {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+    }
+
+.post-page .search-box {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 538px;
+}
+
+.post-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+    .post-container .form-post {
+        overflow: auto;
+    }
+
+        .post-container .form-post .post-input-expand {
+            height: 210px;
+            transition: all .3s ease;
+        }
+
+        .post-container .form-post .jFiler-theme-default {
+            display: inline !important;
+        }
+
+        .post-container .form-post .upload-image:hover {
+            background-color: #ffc107;
+        }
+
+    .post-container .upload-image:hover span {
+        color: white !important;
+    }
+
+    .post-container .post-dropdown {
+        font-size: .8em;
+        min-width: 0px !important;
+    }
+
+    .post-container .post-item {
+        width: 100%;
+    }
+
+        .post-container .post-item .dropdown .dropdown-menu .dropdown-item:focus {
+            background-color: #e0e0e0;
+        }
+
+    .post-container .loading {
+        left: 50%;
+        transform: translate(-50%, 0);
+        margin-bottom: 74px !important;
+    }
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+@media (min-width: 1200px) {
+    .post-container {
+        max-width: 608px;
+    }
+}
+
+@media (min-width: 992px) {
+    .post-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 768px) {
+    .post-container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 576px) {
+    .post-container {
+        max-width: 540px;
+    }
+}
+
+/*Medium devices (tablets, less than 992px)*/
+@media (max-width: 991.98px) {
+    .search-box {
+        width: 100% !important;
+    }
+
+    .logout-form {
+        margin-top: 55px;
+    }
+}

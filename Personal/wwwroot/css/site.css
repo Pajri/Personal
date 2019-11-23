@@ -6,6 +6,10 @@
     min-height: calc(100vh - 56px - 56px + 6px);
 }
 
+.error-container {
+    padding-top: 0px;
+}
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;
